@@ -42,7 +42,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Run tests
       run: |
-        python3 -m unittest test.py
+        python3 -m unittest test_app.py
       env:
         CI: true    
         
