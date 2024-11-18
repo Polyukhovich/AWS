@@ -37,3 +37,63 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+run: |
+        python3 -m unittest Test.py
+      env:
+        CI: true
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ vars.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+        
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        push: true
+        tags: ${{ vars.DOCKERHUB_USERNAME }}/kid_queue_app:latest     
+
+    - name: Setup Terraform
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      uses: hashicorp/setup-terraform@v2
+      with:
+          terraform_version: 1.0.1
+          terraform_wrapper: false
+
+    - name: Terraform Format
+      id: fmt
+      run: terraform fmt -check
+      working-directory: terraform
+      continue-on-error: true
+      
+    - name: Terraform Init
+      env: 
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      id: init
+      run: terraform init
+      working-directory: terraform
+
+    - name: Terraform Plan
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}         
+      id: plan
+      run: |
+        cd terraform
+        terraform plan -no-color -input=false -refresh=true
+        
+    - name: Terraform Apply
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+          cd terraform
+          terraform apply -input=false -auto-approve
