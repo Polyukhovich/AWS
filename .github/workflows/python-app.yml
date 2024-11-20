@@ -83,6 +83,6 @@ jobs:
     
     - name: Build and push
       run: |
-        docker build -t andriypolyuh/AWS:latest .
-        docker push andriypolyuh/AWS:latest
+        docker build -t andriypolyuh/aws:latest .
+        docker push andriypolyuh/aws:latest
 
