@@ -52,6 +52,16 @@ resource "aws_instance" "webapp_instance" {
   ami           = "ami-0166fe664262f664c"
   instance_type = "t2.micro"
   security_groups= ["web_app"]
+  user_data = <<-EOF
+  #!/bin/bash
+  curl -fsSL https://get.docker.com -o get-docker.sh
+  sudo sh get-docker.sh
+  sudo groupadd docker
+  sudo usermod -aG docker ubuntu
+  newgrp docker
+  docker pull andriypolyuh/AWS:latest
+  docker run -id andriypolyuh/AWS:latest
+  EOF
   tags = {
     Name = "webapp_instance"
   }
