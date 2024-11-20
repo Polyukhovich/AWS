@@ -83,6 +83,6 @@ jobs:
     
     - name: Build and push
       run: |
-        docker build -t qwertyasd0933/pawnshop:latest .
-        docker push qwertyasd0933/pawnshop:latest
+        docker build -t andriypolyuh/AWS:latest .
+        docker push andriypolyuh/AWS:latest
 
