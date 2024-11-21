@@ -59,8 +59,8 @@ resource "aws_instance" "webapp_instance" {
   sudo groupadd docker
   sudo usermod -aG docker ubuntu
   newgrp docker
-  docker pull andriypolyuh/AWS:latest
-  docker run -id andriypolyuh/AWS:latest
+  docker pull andriypolyuh/aws:latest
+  docker run -id andriypolyuh/aws:latest
   EOF
   tags = {
     Name = "webapp_instance"
