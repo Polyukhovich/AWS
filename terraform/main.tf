@@ -52,23 +52,26 @@ resource "aws_instance" "web_instance" {
   ami           = "ami-0166fe664262f664c"
   instance_type = "t2.micro"
   security_groups = ["web_app"]
-  user_data = <<-EOF
+ user_data = <<-EOF
   #!/bin/bash
-  # Install Docker
+  # Встановлення Docker
   curl -fsSL https://get.docker.com -o get-docker.sh
   sudo sh get-docker.sh
-  # Add user to Docker group
-  sudo usermod -aG docker ubuntu
-  # Enable and start Docker
-  sudo systemctl enable docker
-  sudo systemctl start docker
-  # Run Docker container with port mapping
-  sudo docker pull andriypolyuh/aws:latest
-  sudo docker run -d -p 8088:8088 andriypolyuh/aws:latest
+  sudo usermod -aG docker ec2-user  # Додавання користувача ec2-user в групу docker
+
+  # Перезавантаження групи для користувача
+  newgrp docker
+
+  # Завантаження і запуск контейнера
+  docker pull andriypolyuh/aws:latest
+  docker run -id -p 8088:8088 andriypolyuh/aws:latest
+
+  # Перевірка, чи запущено Docker
+  docker ps
   EOF
 
   tags = {
-    Name = "web_instance"
+    Name = "webapp_instance"
   }
 }
 
