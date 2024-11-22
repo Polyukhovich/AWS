@@ -56,14 +56,15 @@ resource "aws_instance" "web_instance" {
   #!/bin/bash
   curl -fsSL https://get.docker.com -o get-docker.sh
   sudo sh get-docker.sh
-  sudo groupadd docker
   sudo usermod -aG docker ubuntu
-  newgrp docker
-  docker pull andriypolyuh/aws:latest
-  docker run -id andriypolyuh/aws:latest
+  sudo systemctl enable docker
+  sudo systemctl start docker
+  sudo docker pull andriypolyuh/aws:latest
+  sudo docker run -d andriypolyuh/aws:latest
   EOF
+
   tags = {
-    Name = "webapp_instance"
+    Name = "web_instance"
   }
 }
 
