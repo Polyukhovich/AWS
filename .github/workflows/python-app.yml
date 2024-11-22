@@ -88,14 +88,14 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       id: plan
-      run: terraform plan -no-color -input=false -refresh=true
+      run: terraform plan -no-color -input=false -refresh=true -var="REPOSITORY_URL=${{ sercrets.REPOSITORY_URL }}"
       working-directory: terraform
 
     - name: Terraform Apply
       env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: terraform apply -input=false -auto-approve
+      run: terraform apply -input=false -auto-approve -var="REPOSITORY_URL=${{ sercrets.REPOSITORY_URL }}"
       working-directory: terraform
 
     - name: Login to Docker Hub
