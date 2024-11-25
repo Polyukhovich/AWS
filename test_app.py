@@ -9,7 +9,7 @@ class FlaskAppTests(unittest.TestCase):
     def test_get_hello_endpoint(self):
         r = self.app.get('/')
         self.assertEqual(r.status_code, 200)
-        self.assertEqual(r.get_data(), b'Hello world from app Pipeline testing.')
+        self.assertEqual(r.get_data(), b'Hello world from me.')
 
 if __name__ == '__main__':
     unittest.main()
